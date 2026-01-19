@@ -177,14 +177,13 @@ export const loginUserPswrd: RequestHandler = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { token }, "User logged in"));
 });
 
-export const getUserData: RequestHandler = asyncHandler(async (req, res) => {
+export const getMyData: RequestHandler = asyncHandler(async (req, res) => {
   const { user } = req;
   if (!user) {
     throw new ApiError(404, "User Not Found");
   }
   const userObj: any = user.toObject();
   delete userObj.password;
-  delete userObj._id;
   return res
     .status(200)
     .json(new ApiResponse(200, { user: userObj }, "User Fetched Successfully"));
@@ -218,16 +217,12 @@ export const getAllUsers: RequestHandler = asyncHandler(async (req, res) => {
   const lastUser = users[users.length - 1];
   const newCursor = lastUser ? lastUser._id : null;
 
-  const usersObj = users.map((user) => ({
-    name: user.name,
-    email: user.email,
-  }));
   return res
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { users: usersObj, pagination: { nextCursor: newCursor } },
+        { users, pagination: { nextCursor: newCursor } },
         "Users Fetched",
       ),
     );
@@ -239,7 +234,6 @@ export const getUser: RequestHandler = asyncHandler(async (req, res) => {
   }
   const user = await User.findOne({ _id: req.params["id"] }).select([
     "-password",
-    "-_id",
   ]);
   return res.status(200).json(new ApiResponse(200, { user }, "User Fetched"));
 });
