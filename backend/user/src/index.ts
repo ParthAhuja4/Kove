@@ -19,7 +19,7 @@ const init = async (): Promise<void> => {
   app.listen(port, (): void => console.log("Server started"));
 
   app.use(express.json());
-  app.use(cors());
+  app.use(cors({ origin: "*" }));
   app.use("/api/v1/user", userRouter);
 };
 

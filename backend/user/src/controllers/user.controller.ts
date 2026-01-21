@@ -5,12 +5,10 @@ import asyncHandler from "@/utils/asyncHandler.js";
 import type { RequestHandler } from "express";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import User from "@/models/user.model.js";
+import User, { UserDocument } from "@/models/user.model.js";
 import ApiResponse from "@/utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import type { UserDocument } from "@/models/user.model.js";
 import type { HydratedDocument } from "mongoose";
-import { ParsedQs } from "qs";
 
 const JWT_SECRET = process.env["JWT_SECRET"];
 const TOKEN_EXPIRY = Number(process.env["USER_ACCESS_TOKEN_EXPIRY"]);
@@ -205,17 +203,21 @@ export const updateName: RequestHandler = asyncHandler(async (req, res) => {
 export const getAllUsers: RequestHandler = asyncHandler(async (req, res) => {
   const nextCursor = req.query["nextCursor"];
 
-  let query: { _id?: string | ParsedQs | (string | ParsedQs)[] } = {};
+  let query: { _id?: any } = {};
+  if (req.user) {
+    query._id = { $ne: req.user._id };
+  }
+
   if (nextCursor) {
-    query._id = { $gt: nextCursor };
+    query._id = { ...query._id, $gt: nextCursor };
   }
 
   const users = await User.find(query)
     .sort({ _id: 1 })
     .limit(10)
     .select(["-password"]);
-  const lastUser = users[users.length - 1];
-  const newCursor = lastUser ? lastUser._id : null;
+
+  const newCursor = users.length > 0 ? users[users.length - 1]._id : null;
 
   return res
     .status(200)

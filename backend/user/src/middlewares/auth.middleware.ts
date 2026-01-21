@@ -28,7 +28,7 @@ const authUser: RequestHandler = async (
   next: NextFunction,
 ) => {
   try {
-    let { token } = req.headers;
+    let token = req.headers.authorization?.replace("Bearer ", "");
     if (!token || typeof token !== "string") {
       return res.status(401).json({
         success: false,

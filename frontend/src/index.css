@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 220 100% 99%; /* Very light off-white */
+    --foreground: 220 15% 15%;  /* Dark grayish-blue */
+ 
+    --card: 0 0% 100%;          /* Pure white */
+    --card-foreground: 220 15% 15%; /* Dark grayish-blue */
+ 
+    --popover: 0 0% 100%;       /* Pure white */
+    --popover-foreground: 220 15% 15%; /* Dark grayish-blue */
+ 
+    --primary: 220 90% 55%;     /* Vibrant blue */
+    --primary-foreground: 0 0% 100%; /* Pure white */
+ 
+    --secondary: 210 30% 92%;   /* Light gray-blue */
+    --secondary-foreground: 220 15% 15%; /* Dark grayish-blue */
+ 
+    --muted: 210 20% 95%;       /* Lighter gray-blue */
+    --muted-foreground: 210 10% 45%; /* Medium gray */
+ 
+    --accent: 145 60% 60%;      /* Soft green */
+    --accent-foreground: 220 15% 15%; /* Dark grayish-blue */
+ 
+    --destructive: 0 70% 60%;   /* Muted red */
+    --destructive-foreground: 0 0% 100%; /* Pure white */
+ 
+    --border: 210 15% 85%;      /* Light neutral border */
+    --input: 210 15% 88%;       /* Slightly darker input border */
+    --ring: 220 90% 55%;        /* Primary blue for focus rings */
+ 
+    --radius: 0.5rem;           /* Standard border radius */
+  }
+ 
+  .dark {
+    --background: 220 20% 12%;  /* Dark grayish background */
+    --foreground: 210 20% 90%;  /* Light grayish-white */
+ 
+    --card: 220 20% 15%;        /* Darker card background */
+    --card-foreground: 210 20% 90%; /* Light grayish-white */
+ 
+    --popover: 220 20% 15%;     /* Darker popover background */
+    --popover-foreground: 210 20% 90%; /* Light grayish-white */
+ 
+    --primary: 220 70% 60%;     /* Slightly desaturated vibrant blue */
+    --primary-foreground: 220 10% 10%; /* Very dark text for contrast */
+ 
+    --secondary: 210 15% 25%;   /* Medium dark gray */
+    --secondary-foreground: 210 20% 90%; /* Light grayish-white */
+ 
+    --muted: 210 10% 20%;       /* Darker muted gray */
+    --muted-foreground: 210 5% 60%; /* Lighter gray */
+ 
+    --accent: 145 40% 45%;      /* Desaturated green */
+    --accent-foreground: 210 20% 90%; /* Light grayish-white */
+ 
+    --destructive: 0 50% 45%;   /* Darker muted red */
+    --destructive-foreground: 210 20% 90%; /* Light grayish-white */
+ 
+    --border: 210 10% 30%;      /* Medium dark border */
+    --input: 210 10% 35%;       /* Slightly lighter input border */
+    --ring: 220 70% 60%;        /* Primary blue for focus rings */
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -7,7 +7,9 @@ import { HydratedDocument } from "mongoose";
 import fs from "fs";
 import Message from "@/models/message.model.js";
 import mongoose from "mongoose";
-
+import { io } from "../index.js";
+import uploadOnCloudinary from "@/services/cloudinary.service.js";
+import type { UploadApiResponse } from "cloudinary";
 export type User = {
   _id: string;
   name: string;
@@ -188,6 +190,10 @@ export const sendMessage: RequestHandler = asyncHandler(async (req, res) => {
     await removeLocalFile(imageFile?.path);
     throw new ApiError(404, "Chat not found or user not authorized");
   }
+  let cloudinaryResponse: UploadApiResponse | null | boolean = false;
+  if (imageFile) {
+    cloudinaryResponse = await uploadOnCloudinary(imageFile.path);
+  }
 
   // 3. Construct Message Data
   const messageData = {
@@ -195,12 +201,13 @@ export const sendMessage: RequestHandler = asyncHandler(async (req, res) => {
     sender: senderId,
     text: text || "",
     messageType: imageFile ? "image" : "text",
-    ...(imageFile && {
-      image: {
-        url: imageFile.path,
-        publicId: imageFile.filename,
-      },
-    }),
+    ...(imageFile &&
+      cloudinaryResponse && {
+        image: {
+          url: cloudinaryResponse?.secure_url,
+          publicId: cloudinaryResponse?.original_filename,
+        },
+      }),
   };
 
   try {
@@ -218,6 +225,9 @@ export const sendMessage: RequestHandler = asyncHandler(async (req, res) => {
       ),
     ]);
     await removeLocalFile(imageFile?.path);
+
+    io.to(chatId).emit("receive_message", msg);
+
     return res
       .status(200)
       .json(
@@ -251,7 +261,7 @@ export const getMessageByChat: RequestHandler = asyncHandler(
 
     // 1. Mark unseen messages from the *other* user as seen
     // We do this in parallel with the fetch or just before.
-    // Since we want the returned messages to show "seen: true", we do it first.
+    // Since we want the returned messages to show "seen": true", we do it first.
     await Message.updateMany(
       {
         chatId: chatId,
