@@ -6,6 +6,9 @@ _Engineered for high-availability and instantaneous interaction, Kove provides a
 
 [![React](https://img.shields.io/badge/React-^18.2.0-61DAFB?logo=react&style=flat-square)]() [![Vite](https://img.shields.io/badge/Vite-^7.2.4-646CFF?logo=vite&style=flat-square)]() [![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?logo=node.js&style=flat-square)]() [![Express.js](https://img.shields.io/badge/Express.js-^5.2.1-000000?logo=express&style=flat-square)]() [![MongoDB](https://img.shields.io/badge/MongoDB-^9.1.3-47A248?logo=mongodb&style=flat-square)]() [![Socket.io](https://img.shields.io/badge/Socket.io-^4.7.5-010101?logo=socket.io&style=flat-square)]() [![RabbitMQ](https://img.shields.io/badge/RabbitMQ-^0.10.9-FF6600?logo=rabbitmq&style=flat-square)]() [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-^3.4.3-06B6D4?logo=tailwindcss&style=flat-square)]()
 
+## Demonstration
+![Demonstration GIF](./koveImg.gif)
+
 ## 🎯 Problem & Solution Framing
 
 ### Problem 1: The Monolithic Trap
