@@ -9,7 +9,7 @@ interface SocketWithUser extends Socket {
 export const initSocketServer = (server: HttpServer) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173", // Frontend URL
+      origin: process.env["FRONTEND_URL"], // Frontend URL
       methods: ["GET", "POST"],
     },
   });

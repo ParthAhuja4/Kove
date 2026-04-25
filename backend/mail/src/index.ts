@@ -4,7 +4,7 @@ import type { Application } from "express";
 import { startSendOtpConsumer } from "./rabbitMQ/rabbitMQ.consumer.js";
 
 const app: Application = express();
-const port: number = Number(process.env["PORT"] || 5001);
+const port: number = Number(process.env["PORT"] || 8001);
 
 const init = async (): Promise<void> => {
   await startSendOtpConsumer();

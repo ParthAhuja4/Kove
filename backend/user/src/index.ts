@@ -9,7 +9,7 @@ import cors from "cors";
 import userRouter from "./routes/user.route.js";
 
 const app: Application = express();
-const port: number = Number(process.env["PORT"] || 5000);
+const port: number = Number(process.env["PORT"] || 8000);
 
 const init = async (): Promise<void> => {
   await connectDB();
@@ -19,7 +19,12 @@ const init = async (): Promise<void> => {
   app.listen(port, (): void => console.log("Server started"));
 
   app.use(express.json());
-  app.use(cors({ origin: "*" }));
+  app.use(
+    cors({
+      origin: process.env["FRONTEND_URL"],
+      credentials: true, // needed if you're sending cookies
+    }),
+  );
   app.use("/api/v1/user", userRouter);
 };
 

@@ -23,8 +23,8 @@ export const createNewChat: RequestHandler = asyncHandler(async (req, res) => {
   if (!req.user || !req.user._id) {
     throw new ApiError(404, "User Not Found");
   }
-  const userId: string = req.user._id;
 
+  const userId: string = req.user._id.toString();
   const { otherUserId } = req.body;
 
   if (!otherUserId) {

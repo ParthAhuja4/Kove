@@ -1,9 +1,8 @@
 import amqp from "amqplib";
 import nodemailer from "nodemailer";
 import provideHTML from "@/utils/template.js";
-import type { Transporter } from "nodemailer";
 
-const transporter: Transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   secure: true,
@@ -14,18 +13,24 @@ const transporter: Transporter = nodemailer.createTransport({
 });
 
 export const startSendOtpConsumer = async (): Promise<void> => {
-  const connection = await amqp.connect({
-    protocol: "amqp",
-    hostname: "localhost",
-    port: 5672,
-    username: process.env["RABBITMQ_USERNAME"],
-    password: process.env["RABBITMQ_PSWRD"],
-  });
+  const connectWithRetry = async (retries = 5): Promise<amqp.ChannelModel> => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await amqp.connect(process.env["RABBITMQ_URL"]!);
+      } catch (err) {
+        console.error(
+          `RabbitMQ consumer connection attempt ${i + 1} failed, retrying...`,
+        );
+        await new Promise((res) => setTimeout(res, 3000));
+      }
+    }
+    throw new Error("Consumer could not connect to RabbitMQ after retries");
+  };
 
+  const connection: amqp.ChannelModel = await connectWithRetry();
   const channel = await connection.createChannel();
 
   await channel.assertQueue("send-otp", { durable: true });
-
   channel.prefetch(2);
 
   console.log("RABBITMQ CONSUMER STARTED");
@@ -33,7 +38,6 @@ export const startSendOtpConsumer = async (): Promise<void> => {
   channel.consume("send-otp", async (msg) => {
     if (!msg) return;
 
-    // Read retry count from message headers
     const headers = msg.properties.headers || {};
     const retryCount = headers["x-retries"] ?? 0;
     const MAX_RETRIES = 1;
