@@ -29,10 +29,14 @@ const OTPLoginPage = () => {
     setMessage("");
     try {
       await api.post("/generate-otp", { email });
-      setMessage("If an account with that email exists, an OTP has been sent.");
+      setMessage(
+        "Due to the lack of a free SMTP-compatible background worker platform for deployment, SMS/email sending is currently unavailable. The application itself is functioning correctly. RabbitMQ is successfully connected via CloudAMQP, but the consumer is unable to process and send messages at this time.",
+      );
       setOtpSent(true);
     } catch (err) {
-      setError("Failed to send OTP. Please try again later.");
+      setError(
+        "Due to the lack of a free SMTP-compatible background worker platform for deployment, SMS/email sending is currently unavailable. The application itself is functioning correctly. RabbitMQ is successfully connected via CloudAMQP, but the consumer is unable to process and send messages at this time.",
+      );
       console.error(err);
     }
   };
